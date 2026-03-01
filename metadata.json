@@ -1,0 +1,8 @@
+{
+  "name": "Partido Resilience Web App",
+  "description": "A disaster resilience and anticipatory cash web application for Partido District, Camarines Sur, Philippines.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}
