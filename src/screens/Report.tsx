@@ -93,85 +93,108 @@ const Report = () => {
   }
 
   return (
-    <div className="p-6 space-y-8 pb-24">
-      <header className="flex items-center gap-4">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <ArrowLeft size={24} />
+    <div className="p-6 space-y-8 pb-24 animate-fade-in">
+      <header className="flex items-center gap-5">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="w-12 h-12 flex items-center justify-center bg-white border-2 border-gray-100 rounded-2xl hover:bg-gray-50 transition-all shadow-sm active:scale-90"
+        >
+          <ArrowLeft size={20} className="text-gray-900" />
         </button>
         <div>
-          <h1 className="text-2xl font-black text-gray-900">Report Damage</h1>
-          <p className="text-gray-500 font-medium text-sm">Help us assess the impact.</p>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Report Damage</h1>
+          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Incident Reporting</p>
         </div>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="space-y-4">
-          <label className="text-sm font-bold text-gray-700 uppercase tracking-widest">Select Category</label>
+      <form onSubmit={handleSubmit} className="space-y-10">
+        <div className="space-y-4 animate-slide-up">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Select Category</label>
           <div className="grid grid-cols-2 gap-3">
-            {categories.map((cat) => (
-              <button
+            {categories.map((cat, i) => (
+              <motion.button
                 key={cat.id}
                 type="button"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: i * 0.05 }}
                 onClick={() => setCategory(cat.id)}
-                className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                className={`p-6 rounded-[32px] border-2 text-left transition-all group relative overflow-hidden ${
                   category === cat.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-100 bg-white hover:border-gray-200'
+                    ? 'border-blue-600 bg-blue-50 shadow-lg shadow-blue-50'
+                    : 'border-gray-100 bg-white hover:border-blue-200 shadow-sm'
                 }`}
               >
-                <div className="text-2xl mb-2">{cat.icon}</div>
-                <p className={`text-xs font-black uppercase tracking-widest ${
+                <div className={`text-3xl mb-3 transition-transform group-hover:scale-125 ${category === cat.id ? 'scale-110' : ''}`}>
+                  {cat.icon}
+                </div>
+                <p className={`text-[10px] font-black uppercase tracking-widest leading-tight ${
                   category === cat.id ? 'text-blue-700' : 'text-gray-500'
                 }`}>
                   {cat.label}
                 </p>
-              </button>
+                {category === cat.id && (
+                  <div className="absolute top-2 right-2 w-2 h-2 bg-blue-600 rounded-full" />
+                )}
+              </motion.button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-4">
-          <label className="text-sm font-bold text-gray-700 uppercase tracking-widest">Photo Evidence</label>
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Photo Evidence</label>
           <div
             onClick={() => fileInput.current?.click()}
-            className="w-full aspect-video bg-gray-100 rounded-3xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:bg-gray-50 transition-all"
+            className="w-full aspect-video bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all group relative shadow-inner"
           >
             {preview ? (
               <div className="relative w-full h-full">
                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                 <button
                   onClick={(e) => { e.stopPropagation(); setPreview(null); setImage(null); }}
-                  className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full backdrop-blur"
+                  className="absolute top-4 right-4 bg-black/60 text-white p-3 rounded-2xl backdrop-blur-md shadow-xl active:scale-90 transition-all"
                 >
-                  <X size={16} />
+                  <X size={18} />
                 </button>
               </div>
             ) : (
-              <>
-                <Camera size={48} className="text-gray-400 mb-2" />
-                <p className="text-sm font-bold text-gray-400">Tap to take photo</p>
-              </>
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform mx-auto">
+                  <Camera size={28} className="text-gray-400 group-hover:text-blue-600 transition-colors" />
+                </div>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tap to capture</p>
+              </div>
             )}
           </div>
           <input ref={fileInput} type="file" accept="image/*" capture="environment" onChange={handleImage} className="hidden" />
         </div>
 
-        <div className="space-y-4">
-          <label className="text-sm font-bold text-gray-700 uppercase tracking-widest">Description</label>
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Add more details about the situation..."
-            className="w-full p-6 bg-gray-100 border-none rounded-3xl focus:ring-2 focus:ring-blue-500 min-h-[150px] font-medium"
+            placeholder="Describe the situation in detail..."
+            className="w-full p-8 bg-white border-2 border-gray-100 rounded-[32px] focus:border-blue-600 focus:ring-0 transition-all min-h-[160px] font-bold text-gray-700 shadow-sm placeholder:text-gray-300"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading || !category}
-          className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50"
+          className="w-full bg-blue-600 text-white py-5 rounded-[24px] font-black uppercase tracking-widest shadow-xl shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
         >
-          {loading ? 'Submitting Report...' : 'Submit Report'}
+          {loading ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            <>
+              <CheckCircle2 size={20} />
+              Submit Report
+            </>
+          )}
         </button>
       </form>
     </div>

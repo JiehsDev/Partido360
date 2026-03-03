@@ -40,32 +40,50 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-8 pb-24">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-black text-gray-900">Hello, {profile?.phone.slice(-4)}</h1>
-          <p className="text-gray-500 font-medium text-sm">Partido District, CamSur</p>
+      <header className="flex items-center justify-between animate-fade-in">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+            <ShieldCheck size={24} />
+          </div>
+          <div>
+            <h1 className="text-xl font-black text-gray-900 tracking-tight">
+              {profile?.name || 'User'}
+            </h1>
+            <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">
+              {profile?.barangay || 'Partido District'}
+            </p>
+          </div>
         </div>
-        <div className={`px-4 py-2 rounded-full border text-xs font-black uppercase tracking-widest ${getStatusColor()}`}>
-          {mode} MODE
+        <div className={`px-4 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest shadow-sm ${getStatusColor()}`}>
+          {mode}
         </div>
       </header>
 
-      {/* Weather Card */}
-      <div className="bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-            <CloudRain size={24} />
-          </div>
-          <div>
-            <p className="text-2xl font-black text-gray-900">{weather.temp}°C</p>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{weather.condition}</p>
+      {/* Weather & Risk Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-slide-up">
+        <div className="bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+              <CloudRain size={24} />
+            </div>
+            <div>
+              <p className="text-2xl font-black text-gray-900">{weather.temp}°C</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{weather.condition}</p>
+            </div>
           </div>
         </div>
-        <div className="text-right">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Risk Level</p>
-          <p className={`text-sm font-black ${profile?.riskLevel === 'HIGH' ? 'text-red-600' : 'text-green-600'}`}>
-            {profile?.riskLevel || 'LOW'}
-          </p>
+        <div className="bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
+              <AlertCircle size={24} />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Risk Level</p>
+              <p className={`text-lg font-black ${profile?.riskLevel === 'HIGH' ? 'text-red-600' : 'text-green-600'}`}>
+                {profile?.riskLevel || 'LOW'}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -132,7 +150,7 @@ const Dashboard = () => {
       )}
 
       {/* Main Actions Grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <ActionCard
           icon={<CheckSquare size={24} />}
           label="Checklist"

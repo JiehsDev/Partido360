@@ -20,64 +20,83 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6 font-sans">
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white rounded-[40px] p-10 shadow-2xl"
+        className="w-full max-w-md bg-white rounded-[56px] p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] border-2 border-white/5 relative overflow-hidden"
       >
-        <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200">
-            <ShieldCheck size={40} className="text-white" />
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl" />
+        
+        <div className="text-center mb-12 relative z-10">
+          <div className="w-24 h-24 bg-blue-600 rounded-[32px] flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-900/40 group">
+            <ShieldCheck size={48} className="text-white group-hover:scale-110 transition-transform" />
           </div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">ADMIN COMMAND</h1>
-          <p className="text-blue-600 font-bold tracking-widest text-xs uppercase mt-2">Partido 360 Resilience System</p>
+          <h1 className="text-4xl font-black text-gray-900 tracking-tighter">ADMIN COMMAND</h1>
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" />
+            <p className="text-blue-600 font-black tracking-[0.2em] text-[10px] uppercase">Partido 360 Resilience System</p>
+          </div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="space-y-4">
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="email"
-                placeholder="Admin Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-medium"
-                required
-              />
+        <form onSubmit={handleLogin} className="space-y-8 relative z-10">
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Admin Email</label>
+              <div className="relative">
+                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="email"
+                  placeholder="admin@partido360.gov"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-16 pr-6 py-5 bg-gray-50 border-2 border-gray-100 rounded-[24px] focus:border-blue-600 focus:ring-0 transition-all font-bold text-gray-700 shadow-sm placeholder:text-gray-300"
+                  required
+                />
+              </div>
             </div>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-medium"
-                required
-              />
+            
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Access Password</label>
+              <div className="relative">
+                <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-16 pr-6 py-5 bg-gray-50 border-2 border-gray-100 rounded-[24px] focus:border-blue-600 focus:ring-0 transition-all font-bold text-gray-700 shadow-sm placeholder:text-gray-300"
+                  required
+                />
+              </div>
             </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50"
+            className="w-full bg-blue-600 text-white py-6 rounded-[24px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-blue-900/20 hover:bg-blue-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
           >
-            {loading ? 'Authenticating...' : 'Login to Command Center'}
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Authenticating...
+              </>
+            ) : (
+              'Login to Command Center'
+            )}
           </button>
 
           <div className="text-center">
-            <button type="button" className="text-gray-400 text-sm font-bold hover:text-gray-600 transition-colors">
-              Forgot Password?
+            <button type="button" className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-blue-600 transition-colors">
+              Forgot Access Credentials?
             </button>
           </div>
         </form>
 
-        <div className="mt-10 pt-10 border-t border-gray-100 text-center">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-            Authorized Personnel Only
+        <div className="mt-12 pt-10 border-t-2 border-gray-50 text-center relative z-10">
+          <p className="text-[8px] font-black text-gray-300 uppercase tracking-[0.3em]">
+            Authorized Personnel Only • Secure Session
           </p>
         </div>
       </motion.div>

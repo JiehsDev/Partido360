@@ -111,55 +111,59 @@ const RiskProfile = () => {
   };
 
   return (
-    <div className="p-6 space-y-8">
-      <header>
-        <h1 className="text-2xl font-black text-gray-900">Risk Profile</h1>
-        <p className="text-gray-500">Help us assess your household risk.</p>
+    <div className="p-6 space-y-8 pb-12 animate-fade-in">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Risk Profile</h1>
+        <p className="text-gray-400 font-bold text-xs uppercase tracking-widest">Household Assessment</p>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-gray-700">Your Barangay</label>
-          <select
-            value={barangay}
-            onChange={(e) => setBarangay(e.target.value)}
-            className="w-full p-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500"
-            required
-          >
-            <option value="">Select Barangay</option>
-            <option value="San Jose">San Jose</option>
-            <option value="Tigaon">Tigaon</option>
-            <option value="Goa">Goa</option>
-            <option value="Lagonoy">Lagonoy</option>
-          </select>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Your Barangay</label>
+          <div className="relative">
+            <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <select
+              value={barangay}
+              onChange={(e) => setBarangay(e.target.value)}
+              className="w-full pl-14 pr-10 py-5 bg-white border-2 border-gray-100 rounded-[24px] focus:border-blue-600 focus:ring-0 transition-all font-bold appearance-none shadow-sm"
+              required
+            >
+              <option value="">Select Barangay</option>
+              <option value="San Jose">San Jose</option>
+              <option value="Tigaon">Tigaon</option>
+              <option value="Goa">Goa</option>
+              <option value="Lagonoy">Lagonoy</option>
+            </select>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-gray-700">Household Size</label>
-          <div className="flex items-center gap-4">
-            <Users className="text-gray-400" />
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Household Size</label>
+          <div className="relative">
+            <Users className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="number"
               min="1"
               value={residents}
               onChange={(e) => setResidents(parseInt(e.target.value))}
-              className="flex-1 p-4 bg-white border border-gray-200 rounded-2xl"
+              className="w-full pl-14 pr-6 py-5 bg-white border-2 border-gray-100 rounded-[24px] focus:border-blue-600 focus:ring-0 transition-all font-bold shadow-sm"
+              required
             />
           </div>
         </div>
 
-        <div className="space-y-3">
-          <label className="text-sm font-bold text-gray-700">Vulnerable Members</label>
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Vulnerable Members</label>
           <div className="grid grid-cols-2 gap-3">
             {['Elderly', 'PWD', 'Infants', 'Pregnant'].map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => toggleVulnerable(type)}
-                className={`p-4 rounded-2xl border text-sm font-bold transition-all ${
+                className={`py-5 rounded-[24px] border-2 font-black text-[10px] uppercase tracking-widest transition-all shadow-sm ${
                   vulnerable.includes(type)
-                    ? 'bg-blue-50 border-blue-500 text-blue-700'
-                    : 'bg-white border-gray-200 text-gray-600'
+                    ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100'
+                    : 'bg-white border-gray-100 text-gray-400 hover:border-blue-200'
                 }`}
               >
                 {type}
@@ -168,32 +172,52 @@ const RiskProfile = () => {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-gray-700">Location Assessment</label>
-          <div className="w-full h-48 rounded-2xl overflow-hidden border border-gray-200 bg-gray-100">
+        <div className="space-y-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Location Assessment</label>
+          <div className="w-full h-56 rounded-[32px] overflow-hidden border-2 border-gray-100 bg-gray-50 shadow-inner relative group">
             {hasToken ? (
               <div ref={mapContainer} className="w-full h-full" />
             ) : (
-              <MapPlaceholder title="Hazard Zone Map" />
+              <div className="w-full h-full flex items-center justify-center">
+                <MapPlaceholder title="Hazard Zone Map" />
+              </div>
             )}
-          </div>
-          {location && (
-            <div className={`p-4 rounded-2xl flex items-center gap-3 ${
-              riskLevel === 'HIGH' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
-            }`}>
-              <AlertCircle size={20} />
-              <span className="text-sm font-bold">
-                {riskLevel === 'HIGH' ? 'High Hazard Zone Detected' : 'Safe Zone Detected'}
-              </span>
+            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-100 shadow-sm flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              <span className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Live GPS</span>
             </div>
+          </div>
+          
+          {location && (
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className={`p-6 rounded-[24px] flex items-center gap-4 border-2 shadow-sm ${
+                riskLevel === 'HIGH' 
+                  ? 'bg-red-50 border-red-100 text-red-700' 
+                  : 'bg-green-50 border-green-100 text-green-700'
+              }`}
+            >
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                riskLevel === 'HIGH' ? 'bg-red-100' : 'bg-green-100'
+              }`}>
+                <AlertCircle size={20} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">System Assessment</p>
+                <p className="text-sm font-black">
+                  {riskLevel === 'HIGH' ? 'High Hazard Zone Detected' : 'Safe Zone Detected'}
+                </p>
+              </div>
+            </motion.div>
           )}
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all"
+          className="w-full bg-blue-600 text-white py-5 rounded-[24px] font-black uppercase tracking-widest shadow-xl shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all"
         >
-          Save Profile
+          Save & Continue
         </button>
       </form>
     </div>

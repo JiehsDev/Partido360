@@ -77,14 +77,14 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <div className={`${getBannerColor()} px-4 py-2 text-center text-sm font-bold sticky top-0 z-40 flex items-center justify-center gap-2`}>
-        <AlertTriangle size={16} />
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+      <div className={`${getBannerColor()} w-full px-4 py-2.5 text-center text-xs font-black uppercase tracking-widest sticky top-0 z-50 flex items-center justify-center gap-2 shadow-lg backdrop-blur-md bg-opacity-90`}>
+        <AlertTriangle size={14} />
         {mode === 'YELLOW' && 'STORM ADVISORY: Monitoring Tropical Storm "Pepito"'}
         {mode === 'RED' && 'CRITICAL ALERT: EVACUATION ADVISED'}
         {mode === 'EMERGENCY' && 'EMERGENCY MODE: POST-IMPACT RESPONSE'}
       </div>
-      <main className="max-w-md mx-auto min-h-screen relative">
+      <main className="w-full max-w-2xl min-h-screen relative bg-white md:shadow-2xl md:my-8 md:rounded-[48px] overflow-hidden">
         {children}
       </main>
       <PhaseSwitcher />

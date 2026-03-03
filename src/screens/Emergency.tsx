@@ -45,32 +45,36 @@ const Emergency = () => {
   };
 
   return (
-    <div className="p-6 space-y-8 flex flex-col min-h-screen">
-      <header className="flex items-center gap-4">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <ArrowLeft size={24} />
+    <div className="p-6 space-y-8 flex flex-col min-h-screen animate-fade-in">
+      <header className="flex items-center gap-5">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="w-12 h-12 flex items-center justify-center bg-white border-2 border-gray-100 rounded-2xl hover:bg-gray-50 transition-all shadow-sm active:scale-90"
+        >
+          <ArrowLeft size={20} className="text-gray-900" />
         </button>
         <div>
-          <h1 className="text-2xl font-black text-gray-900">Emergency Status</h1>
-          <p className="text-gray-500 font-medium text-sm">Update your current safety status.</p>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Emergency</h1>
+          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Safety Status Update</p>
         </div>
       </header>
 
       {!status ? (
-        <div className="flex-1 flex flex-col gap-6 justify-center">
+        <div className="flex-1 flex flex-col gap-6 justify-center animate-slide-up">
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleStatus('SAFE')}
             disabled={loading}
-            className="flex-1 bg-green-500 text-white rounded-[48px] p-8 shadow-2xl shadow-green-200 flex flex-col items-center justify-center gap-4 group transition-all"
+            className="flex-1 bg-emerald-500 text-white rounded-[48px] p-10 shadow-2xl shadow-emerald-100 flex flex-col items-center justify-center gap-6 group transition-all relative overflow-hidden"
           >
-            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-              <ShieldCheck size={64} />
+            <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
+            <div className="w-28 h-28 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform backdrop-blur-md border-4 border-white/30">
+              <ShieldCheck size={72} />
             </div>
-            <div className="text-center">
-              <p className="text-4xl font-black mb-2">I AM SAFE</p>
-              <p className="text-sm font-bold opacity-80 uppercase tracking-widest">No assistance needed</p>
+            <div className="text-center relative z-10">
+              <p className="text-4xl font-black tracking-tighter mb-2">I AM SAFE</p>
+              <p className="text-[10px] font-black opacity-60 uppercase tracking-widest">No assistance needed</p>
             </div>
           </motion.button>
 
@@ -79,14 +83,15 @@ const Emergency = () => {
             whileTap={{ scale: 0.98 }}
             onClick={() => handleStatus('HELP')}
             disabled={loading}
-            className="flex-1 bg-red-600 text-white rounded-[48px] p-8 shadow-2xl shadow-red-200 flex flex-col items-center justify-center gap-4 group transition-all"
+            className="flex-1 bg-rose-600 text-white rounded-[48px] p-10 shadow-2xl shadow-rose-100 flex flex-col items-center justify-center gap-6 group transition-all relative overflow-hidden"
           >
-            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-              <AlertCircle size={64} />
+            <div className="absolute -left-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
+            <div className="w-28 h-28 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform backdrop-blur-md border-4 border-white/30">
+              <AlertCircle size={72} />
             </div>
-            <div className="text-center">
-              <p className="text-4xl font-black mb-2">I NEED HELP</p>
-              <p className="text-sm font-bold opacity-80 uppercase tracking-widest">Request immediate rescue</p>
+            <div className="text-center relative z-10">
+              <p className="text-4xl font-black tracking-tighter mb-2">I NEED HELP</p>
+              <p className="text-[10px] font-black opacity-60 uppercase tracking-widest">Request immediate rescue</p>
             </div>
           </motion.button>
         </div>
@@ -94,36 +99,45 @@ const Emergency = () => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="flex-1 flex flex-col items-center justify-center text-center space-y-6"
+          className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
         >
-          <div className={`w-32 h-32 rounded-full flex items-center justify-center ${
-            status === 'SAFE' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+          <div className={`w-40 h-40 rounded-full flex items-center justify-center shadow-2xl ${
+            status === 'SAFE' ? 'bg-emerald-100 text-emerald-600 shadow-emerald-50' : 'bg-rose-100 text-rose-600 shadow-rose-50'
           }`}>
-            <CheckCircle2 size={80} />
+            <CheckCircle2 size={96} />
           </div>
-          <div>
-            <h2 className="text-3xl font-black text-gray-900 mb-2">Status Reported</h2>
-            <p className="text-gray-500 font-medium max-w-[250px] mx-auto leading-relaxed">
-              Your status and coordinates have been sent to the Partido District Emergency Operations Center.
+          <div className="space-y-4">
+            <h2 className="text-4xl font-black text-gray-900 tracking-tighter">Status Reported</h2>
+            <p className="text-gray-400 font-bold text-xs uppercase tracking-widest max-w-[280px] mx-auto leading-relaxed">
+              Your status and coordinates have been sent to the <span className="text-gray-900">Partido District Emergency Operations Center</span>.
             </p>
           </div>
           <button
             onClick={() => navigate('/')}
-            className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:bg-black active:scale-95 transition-all"
+            className="w-full max-w-[280px] bg-gray-900 text-white py-5 rounded-[24px] font-black uppercase tracking-widest shadow-2xl hover:bg-black active:scale-[0.98] transition-all"
           >
             Back to Dashboard
           </button>
         </motion.div>
       )}
 
-      <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100 flex items-center gap-4">
-        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
-          <AlertCircle size={20} />
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="bg-gray-900 p-8 rounded-[40px] text-white shadow-2xl shadow-gray-200 relative overflow-hidden"
+      >
+        <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl" />
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-blue-400">
+            <AlertCircle size={20} />
+          </div>
+          <p className="font-black text-sm uppercase tracking-widest">Location Sharing</p>
         </div>
-        <p className="text-xs text-blue-700 font-bold leading-relaxed">
-          Your location is automatically shared with local authorities when you update your status.
+        <p className="text-xs text-gray-400 leading-relaxed font-bold uppercase tracking-wider">
+          Your location is automatically shared with local authorities when you update your status for <span className="text-white">immediate response</span>.
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };

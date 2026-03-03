@@ -103,13 +103,19 @@ const SafeRoute = () => {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-900">
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-        <button onClick={() => navigate(-1)} className="bg-white/10 backdrop-blur p-3 rounded-2xl shadow-lg hover:bg-white/20 transition-all text-white">
-          <ArrowLeft size={24} />
-        </button>
-        <div className="bg-white/10 backdrop-blur px-4 py-3 rounded-2xl shadow-lg font-black text-sm uppercase tracking-widest text-white">
-          Safe Route
+    <div className="h-screen flex flex-col bg-gray-900 animate-fade-in">
+      <div className="absolute top-6 left-6 right-6 z-10 flex items-center justify-between gap-4 pointer-events-none">
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="w-12 h-12 flex items-center justify-center bg-white/10 backdrop-blur-md border-2 border-white/10 rounded-2xl shadow-2xl hover:bg-white/20 transition-all active:scale-90"
+          >
+            <ArrowLeft size={20} className="text-white" />
+          </button>
+          <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl shadow-2xl border-2 border-white/10 font-black text-[10px] uppercase tracking-widest text-white flex items-center gap-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            Safe Route
+          </div>
         </div>
       </div>
 
@@ -117,51 +123,74 @@ const SafeRoute = () => {
         {hasToken ? (
           <div ref={mapContainer} className="w-full h-full" />
         ) : (
-          <div className="w-full h-full bg-gray-800 p-6">
-            <MapPlaceholder title="Safe Route Navigation" message="Navigation view is in demo mode. Connect Mapbox for live routing." />
+          <div className="w-full h-full bg-gray-800 p-6 pt-24">
+            <div className="h-64 rounded-[40px] overflow-hidden border-2 border-white/5 shadow-2xl">
+              <MapPlaceholder title="Safe Route Navigation" message="Navigation view is in demo mode. Connect Mapbox for live routing." />
+            </div>
           </div>
         )}
       </div>
 
-      <div className="bg-gray-900 p-8 rounded-t-[48px] shadow-2xl space-y-8 animate-in slide-in-from-bottom-full duration-500">
+      <motion.div 
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        className="bg-gray-900 p-10 rounded-t-[56px] shadow-[0_-20px_80px_rgba(0,0,0,0.5)] border-t-2 border-white/5 z-20 space-y-8"
+      >
+        <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-4" />
+        
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-900">
-              <Navigation size={24} />
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 bg-blue-600 rounded-[24px] flex items-center justify-center text-white shadow-2xl shadow-blue-900 group">
+              <Navigation size={32} className="group-hover:scale-110 transition-transform" />
             </div>
             <div>
-              <p className="text-2xl font-black text-white">{time}</p>
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{distance}</p>
+              <p className="text-4xl font-black text-white tracking-tighter">{time}</p>
+              <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">{distance}</p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Destination</p>
-            <p className="text-sm font-black text-white">PSU Gym Center</p>
+            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">Destination</p>
+            <p className="text-lg font-black text-white tracking-tight">PSU Gym Center</p>
           </div>
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center gap-4 p-4 bg-red-900/20 border border-red-900/30 rounded-2xl">
-            <AlertTriangle className="text-red-500" size={20} />
-            <p className="text-xs text-red-400 font-bold leading-relaxed">
-              Hazard detected on San Jose Road. Route has been recalculated to avoid flooding.
+          <motion.div 
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-5 p-6 bg-rose-500/10 border-2 border-rose-500/20 rounded-[32px]"
+          >
+            <div className="w-10 h-10 bg-rose-500/20 rounded-xl flex items-center justify-center text-rose-500">
+              <AlertTriangle size={20} />
+            </div>
+            <p className="text-[10px] text-rose-200 font-black uppercase tracking-widest leading-relaxed flex-1">
+              Hazard detected on <span className="text-white">San Jose Road</span>. Route recalculated to avoid flooding.
             </p>
-          </div>
-          <div className="flex items-center gap-4 p-4 bg-green-900/20 border border-green-900/30 rounded-2xl">
-            <ShieldCheck className="text-green-500" size={20} />
-            <p className="text-xs text-green-400 font-bold leading-relaxed">
-              This route is verified as safe by the local disaster response team.
+          </motion.div>
+          
+          <motion.div 
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="flex items-center gap-5 p-6 bg-emerald-500/10 border-2 border-emerald-500/20 rounded-[32px]"
+          >
+            <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-500">
+              <ShieldCheck size={20} />
+            </div>
+            <p className="text-[10px] text-emerald-200 font-black uppercase tracking-widest leading-relaxed flex-1">
+              This route is <span className="text-white">VERIFIED SAFE</span> by the local disaster response team.
             </p>
-          </div>
+          </motion.div>
         </div>
 
         <button
           onClick={() => navigate('/')}
-          className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-blue-900 hover:bg-blue-700 active:scale-95 transition-all"
+          className="w-full bg-white text-gray-900 py-6 rounded-[24px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-gray-100 active:scale-[0.98] transition-all"
         >
           End Navigation
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 };
