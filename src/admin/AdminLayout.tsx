@@ -46,7 +46,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <ShieldCheck size={24} />
           </div>
           <div>
-            <h1 className="text-lg font-black tracking-tight">PARTIDO</h1>
+            <h1 className="text-lg font-black tracking-tight">PARTIDO 360</h1>
             <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Admin Command</p>
           </div>
         </div>

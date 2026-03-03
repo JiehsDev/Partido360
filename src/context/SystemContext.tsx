@@ -8,6 +8,9 @@ export type SystemMode = 'GREEN' | 'YELLOW' | 'RED' | 'EMERGENCY';
 interface UserProfile {
   uid: string;
   phone: string;
+  name?: string;
+  age?: number;
+  gender?: 'MALE' | 'FEMALE' | 'OTHER';
   barangay?: string;
   residents?: number;
   vulnerableMembers?: string[];

@@ -3,14 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { auth, isFirebaseMock } from '../firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { Shield, Phone } from 'lucide-react';
+import { Shield, Phone, User, Calendar, Users } from 'lucide-react';
 import { useSystem } from '../context/SystemContext';
 
 const Login = () => {
-  const { loginMock } = useSystem();
+  const { loginMock, updateProfile } = useSystem();
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState<'MALE' | 'FEMALE' | 'OTHER' | ''>('');
+  const [step, setStep] = useState<'phone' | 'otp' | 'details'>('phone');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -30,16 +33,33 @@ const Login = () => {
     try {
       if (isFirebaseMock) {
         loginMock(phone);
-        navigate('/risk-profile');
+        setStep('details');
         return;
       }
       // For demo purposes, we use anonymous sign-in if real phone auth is not configured
-      // In a real app, you'd use confirmationResult.confirm(otp)
       await signInAnonymously(auth);
-      navigate('/risk-profile');
+      setStep('details');
     } catch (error) {
       console.error(error);
       alert('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await updateProfile({
+        name,
+        age: parseInt(age),
+        gender: gender as any,
+      });
+      navigate('/risk-profile');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to save details.');
     } finally {
       setLoading(false);
     }
@@ -55,7 +75,7 @@ const Login = () => {
         <div className="w-24 h-24 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-blue-200">
           <Shield size={48} className="text-white" />
         </div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">PARTIDO</h1>
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight uppercase">PARTIDO 360</h1>
         <p className="text-blue-600 font-bold tracking-widest text-xs uppercase">Resilience App</p>
       </motion.div>
 
@@ -81,7 +101,7 @@ const Login = () => {
               {loading ? 'Sending...' : 'Send OTP'}
             </button>
           </form>
-        ) : (
+        ) : step === 'otp' ? (
           <form onSubmit={handleVerifyOtp} className="space-y-4">
             <div className="flex justify-between gap-2">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -109,6 +129,52 @@ const Login = () => {
               className="w-full text-gray-500 font-medium text-sm"
             >
               Change Number
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleSaveDetails} className="space-y-4">
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-gray-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                required
+              />
+            </div>
+            <div className="relative">
+              <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="number"
+                placeholder="Age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-gray-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                required
+              />
+            </div>
+            <div className="relative">
+              <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value as any)}
+                className="w-full pl-12 pr-4 py-4 bg-gray-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all font-medium appearance-none"
+                required
+              >
+                <option value="">Select Gender</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50"
+            >
+              {loading ? 'Saving...' : 'Complete Registration'}
             </button>
           </form>
         )}

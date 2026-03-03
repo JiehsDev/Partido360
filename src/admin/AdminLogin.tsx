@@ -31,7 +31,7 @@ const AdminLogin = () => {
             <ShieldCheck size={40} className="text-white" />
           </div>
           <h1 className="text-3xl font-black text-gray-900 tracking-tight">ADMIN COMMAND</h1>
-          <p className="text-blue-600 font-bold tracking-widest text-xs uppercase mt-2">Partido Resilience System</p>
+          <p className="text-blue-600 font-bold tracking-widest text-xs uppercase mt-2">Partido 360 Resilience System</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
