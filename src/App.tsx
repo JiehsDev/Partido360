@@ -10,6 +10,20 @@ import Emergency from './screens/Emergency';
 import Report from './screens/Report';
 import ReliefPass from './screens/ReliefPass';
 import SafeRoute from './screens/SafeRoute';
+
+// Admin Screens
+import AdminLayout from './admin/AdminLayout';
+import AdminLogin from './admin/AdminLogin';
+import AdminDashboard from './admin/AdminDashboard';
+import StormControl from './admin/StormControl';
+import CashProtocol from './admin/CashProtocol';
+import EvacuationCenters from './admin/EvacuationCenters';
+import HelpRequests from './admin/HelpRequests';
+import DamageReports from './admin/DamageReports';
+import ReliefPassManagement from './admin/ReliefPassManagement';
+import Analytics from './admin/Analytics';
+import AdminSettings from './admin/AdminSettings';
+
 import { AlertTriangle, Settings } from 'lucide-react';
 import { useState } from 'react';
 
@@ -84,6 +98,25 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/*" element={
+            <AdminLayout>
+              <Routes>
+                <Route path="/" element={<AdminDashboard />} />
+                <Route path="/storm" element={<StormControl />} />
+                <Route path="/cash" element={<CashProtocol />} />
+                <Route path="/evac" element={<EvacuationCenters />} />
+                <Route path="/help" element={<HelpRequests />} />
+                <Route path="/reports" element={<DamageReports />} />
+                <Route path="/relief" element={<ReliefPassManagement />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/settings" element={<AdminSettings />} />
+              </Routes>
+            </AdminLayout>
+          } />
+
           <Route
             path="/*"
             element={
