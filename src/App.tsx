@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { SystemProvider, useSystem } from './context/SystemContext';
 import Login from './screens/Login';
@@ -25,7 +26,6 @@ import Analytics from './admin/Analytics';
 import AdminSettings from './admin/AdminSettings';
 
 import { AlertTriangle, Settings } from 'lucide-react';
-import { useState } from 'react';
 
 const PhaseSwitcher = () => {
   const { mode, setMode } = useSystem();

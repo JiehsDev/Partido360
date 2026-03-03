@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { ArrowLeft, Navigation, AlertTriangle, ShieldCheck, MapPin } from 'lucide-react';
+import { motion } from 'motion/react';
 import MapPlaceholder from '../components/MapPlaceholder';
 
 const SafeRoute = () => {

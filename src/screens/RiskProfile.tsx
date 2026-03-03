@@ -4,6 +4,7 @@ import { useSystem } from '../context/SystemContext';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapPin, Users, AlertCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 import MapPlaceholder from '../components/MapPlaceholder';
 
 // Mock hazard zones (Partido District area)

@@ -21,15 +21,17 @@ const StormControl = () => {
   };
 
   return (
-    <div className="grid grid-cols-3 gap-8">
-      <div className="col-span-2 space-y-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 animate-fade-in">
+      <div className="lg:col-span-2 space-y-6 lg:space-y-8">
         {/* Storm Input Card */}
-        <div className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm">
+        <div className="bg-white p-6 lg:p-8 rounded-[32px] lg:rounded-[40px] border border-gray-100 shadow-sm">
           <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-3">
-            <CloudRain className="text-blue-600" />
+            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+              <CloudRain className="text-blue-600" size={20} />
+            </div>
             Storm Parameters
           </h3>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Storm Name</label>
               <div className="relative">
@@ -38,7 +40,7 @@ const StormControl = () => {
                   type="text" 
                   value={stormName} 
                   onChange={(e) => setStormName(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 font-bold"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
                 />
               </div>
             </div>
@@ -50,7 +52,7 @@ const StormControl = () => {
                   type="number" 
                   value={distance} 
                   onChange={(e) => setDistance(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 font-bold"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
                 />
               </div>
             </div>
@@ -62,7 +64,7 @@ const StormControl = () => {
                   type="number" 
                   value={windSpeed} 
                   onChange={(e) => setWindSpeed(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 font-bold"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
                 />
               </div>
             </div>
@@ -74,7 +76,7 @@ const StormControl = () => {
                   type="number" 
                   value={landfall} 
                   onChange={(e) => setLandfall(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 font-bold"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
                 />
               </div>
             </div>
@@ -82,9 +84,11 @@ const StormControl = () => {
         </div>
 
         {/* Advisory Message Editor */}
-        <div className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm">
+        <div className="bg-white p-6 lg:p-8 rounded-[32px] lg:rounded-[40px] border border-gray-100 shadow-sm">
           <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-8 flex items-center gap-3">
-            <Send className="text-blue-600" />
+            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+              <Send className="text-blue-600" size={20} />
+            </div>
             Advisory Message Editor
           </h3>
           <div className="space-y-6">
@@ -94,7 +98,7 @@ const StormControl = () => {
                 type="text" 
                 value={advisoryTitle} 
                 onChange={(e) => setAdvisoryTitle(e.target.value)}
-                className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 font-bold text-sm"
+                className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold text-sm outline-none"
               />
             </div>
             <div className="space-y-2">
@@ -103,30 +107,32 @@ const StormControl = () => {
                 rows={4}
                 value={advisoryBody} 
                 onChange={(e) => setAdvisoryBody(e.target.value)}
-                className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 font-medium text-sm"
+                className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-medium text-sm outline-none"
               />
             </div>
-            <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center gap-3">
-              <Send size={20} />
+            <button className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-900/20 hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+              <Send size={18} />
               Save & Publish Advisory
             </button>
           </div>
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-6 lg:space-y-8">
         {/* State Toggle Card */}
-        <div className="bg-gray-900 p-8 rounded-[40px] text-white shadow-2xl">
-          <h3 className="text-lg font-black uppercase tracking-tight mb-8 flex items-center gap-3">
+        <div className="bg-gray-900 p-6 lg:p-8 rounded-[32px] lg:rounded-[40px] text-white shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl" />
+          
+          <h3 className="text-lg font-black uppercase tracking-tight mb-8 flex items-center gap-3 relative z-10">
             <AlertTriangle className="text-yellow-500" />
             System State Toggle
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-3 relative z-10">
             {(['GREEN', 'YELLOW', 'RED', 'EMERGENCY'] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => handleStateChange(m)}
-                className={`w-full p-6 rounded-3xl border-2 transition-all flex items-center justify-between group ${
+                className={`w-full p-5 rounded-3xl border-2 transition-all flex items-center justify-between group ${
                   mode === m
                     ? m === 'GREEN' ? 'border-green-500 bg-green-500/10 text-green-500' :
                       m === 'YELLOW' ? 'border-yellow-500 bg-yellow-500/10 text-yellow-500' :
@@ -141,13 +147,13 @@ const StormControl = () => {
                     m === 'YELLOW' ? 'bg-yellow-500' :
                     m === 'RED' ? 'bg-red-600' : 'bg-white'
                   }`} />
-                  <span className="text-sm font-black uppercase tracking-widest">{m}</span>
+                  <span className="text-xs font-black uppercase tracking-widest">{m}</span>
                 </div>
                 {mode === m && <div className="w-2 h-2 bg-current rounded-full animate-pulse" />}
               </button>
             ))}
           </div>
-          <div className="mt-8 p-4 bg-white/5 rounded-2xl border border-white/10">
+          <div className="mt-8 p-5 bg-white/5 rounded-2xl border border-white/10 relative z-10">
             <p className="text-[10px] font-bold text-gray-400 leading-relaxed">
               Changing the state will immediately update the frontend for all users and trigger relevant protocols (e.g., Cash Grant on RED).
             </p>
@@ -155,15 +161,15 @@ const StormControl = () => {
         </div>
 
         {/* Live Preview */}
-        <div className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm">
-          <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">User Banner Preview</h3>
-          <div className={`p-4 rounded-2xl text-center text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 ${
+        <div className="bg-white p-6 lg:p-8 rounded-[32px] lg:rounded-[40px] border border-gray-100 shadow-sm">
+          <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">User Banner Preview</h3>
+          <div className={`p-5 rounded-2xl text-center text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-sm ${
             mode === 'GREEN' ? 'bg-green-50 text-green-600 border border-green-100' :
             mode === 'YELLOW' ? 'bg-yellow-50 text-yellow-700 border border-yellow-100' :
             mode === 'RED' ? 'bg-red-50 text-red-700 border border-red-100' :
             'bg-gray-900 text-white'
           }`}>
-            <AlertTriangle size={14} />
+            <AlertTriangle size={16} />
             {advisoryTitle}
           </div>
         </div>
