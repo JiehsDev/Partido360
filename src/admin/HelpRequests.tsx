@@ -11,6 +11,13 @@ const HelpRequests = () => {
     { id: 'REQ-004', user: 'USR-9281', barangay: 'Lagonoy', timestamp: '1h ago', status: 'PENDING', location: [123.55, 13.73] },
   ]);
 
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const updateStatus = (status: string) => {
+    if (!selectedId) return;
+    setRequests(prev => prev.map(r => r.id === selectedId ? { ...r, status } : r));
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'PENDING': return 'bg-red-100 text-red-700';
@@ -79,7 +86,12 @@ const HelpRequests = () => {
                           </div>
                         </td>
                         <td className="py-5 text-right">
-                          <button className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                          <button 
+                            onClick={() => setSelectedId(req.id)}
+                            className={`p-2.5 rounded-xl transition-all ${
+                              selectedId === req.id ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                            }`}
+                          >
                             <ArrowRight size={20} />
                           </button>
                         </td>
@@ -98,7 +110,9 @@ const HelpRequests = () => {
                 <Activity size={24} />
               </div>
               <div>
-                <p className="text-2xl font-black text-gray-900">14</p>
+                <p className="text-2xl font-black text-gray-900">
+                  {requests.filter(r => r.status === 'PENDING').length}
+                </p>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Active Requests</p>
               </div>
             </div>
@@ -107,7 +121,9 @@ const HelpRequests = () => {
                 <AlertCircle size={24} />
               </div>
               <div>
-                <p className="text-2xl font-black text-gray-900">08</p>
+                <p className="text-2xl font-black text-gray-900">
+                  {requests.filter(r => r.status === 'RESPONDING').length}
+                </p>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Responding</p>
               </div>
             </div>
@@ -116,7 +132,9 @@ const HelpRequests = () => {
                 <CheckCircle2 size={24} />
               </div>
               <div>
-                <p className="text-2xl font-black text-gray-900">124</p>
+                <p className="text-2xl font-black text-gray-900">
+                  {requests.filter(r => r.status === 'RESOLVED').length}
+                </p>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Resolved Today</p>
               </div>
             </div>
@@ -136,8 +154,18 @@ const HelpRequests = () => {
               <MapPlaceholder title="Emergency Requests" message="Live incident map is currently in demo mode." />
               <div className="absolute inset-0 bg-gray-900/5 pointer-events-none" />
               {/* Mock Markers */}
-              <div className="absolute top-1/4 left-1/3 w-4 h-4 bg-red-600 rounded-full border-2 border-white shadow-lg animate-ping" />
-              <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-red-600 rounded-full border-2 border-white shadow-lg animate-ping" />
+              {requests.filter(r => r.status !== 'RESOLVED').map((req, i) => (
+                <div 
+                  key={req.id}
+                  className={`absolute w-4 h-4 rounded-full border-2 border-white shadow-lg animate-ping ${
+                    req.status === 'PENDING' ? 'bg-red-600' : 'bg-yellow-500'
+                  }`}
+                  style={{ 
+                    top: `${20 + (i * 15)}%`, 
+                    left: `${30 + (i * 10)}%` 
+                  }} 
+                />
+              ))}
             </div>
           </div>
 
@@ -145,15 +173,26 @@ const HelpRequests = () => {
           <div className="bg-gray-900 p-6 lg:p-8 rounded-[32px] lg:rounded-[40px] text-white shadow-2xl relative overflow-hidden">
             <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl" />
             
-            <h3 className="text-sm font-black uppercase tracking-widest mb-6 relative z-10">Response Actions</h3>
+            <h3 className="text-sm font-black uppercase tracking-widest mb-6 relative z-10">
+              Response Actions {selectedId && <span className="text-blue-400 ml-2">({selectedId})</span>}
+            </h3>
             <div className="space-y-3 relative z-10">
-              <button className="w-full py-5 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-blue-700 active:scale-[0.98] transition-all text-center shadow-lg shadow-blue-900/40">
+              <button 
+                onClick={() => updateStatus('RESPONDING')}
+                className="w-full py-5 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-blue-700 active:scale-[0.98] transition-all text-center shadow-lg shadow-blue-900/40"
+              >
                 Mark as Responding
               </button>
-              <button className="w-full py-5 bg-green-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-green-700 active:scale-[0.98] transition-all text-center shadow-lg shadow-green-900/40">
+              <button 
+                onClick={() => updateStatus('RESOLVED')}
+                className="w-full py-5 bg-green-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-green-700 active:scale-[0.98] transition-all text-center shadow-lg shadow-green-900/40"
+              >
                 Mark as Resolved
               </button>
-              <button className="w-full py-5 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 active:scale-[0.98] transition-all text-center">
+              <button 
+                onClick={() => {}}
+                className="w-full py-5 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 active:scale-[0.98] transition-all text-center"
+              >
                 Assign Rescue Team
               </button>
             </div>

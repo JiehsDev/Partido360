@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { MapPin, Users, Plus, Edit2, Trash2, Search, Filter, AlertCircle } from 'lucide-react';
+import { MapPin, Users, Plus, Edit2, Trash2, Search, Filter, AlertCircle, X } from 'lucide-react';
 import MapPlaceholder from '../components/MapPlaceholder';
+import { motion, AnimatePresence } from 'motion/react';
 
 const EvacuationCenters = () => {
   const [centers, setCenters] = useState([
@@ -10,6 +11,50 @@ const EvacuationCenters = () => {
     { id: 4, name: 'Lagonoy Sports Complex', barangay: 'Lagonoy', capacity: 600, current: 0, status: 'PREPARING' },
     { id: 5, name: 'Tigaon Public Market', barangay: 'Tigaon', capacity: 150, current: 0, status: 'CLOSED' },
   ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCenter, setEditingCenter] = useState<any>(null);
+  const [formData, setFormData] = useState({ name: '', barangay: '', capacity: 0, current: 0 });
+
+  const handleOpenAdd = () => {
+    setEditingCenter(null);
+    setFormData({ name: '', barangay: '', capacity: 0, current: 0 });
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (center: any) => {
+    setEditingCenter(center);
+    setFormData({ 
+      name: center.name, 
+      barangay: center.barangay, 
+      capacity: center.capacity, 
+      current: center.current 
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingCenter) {
+      setCenters(prev => prev.map(c => c.id === editingCenter.id ? { 
+        ...c, 
+        ...formData,
+        status: formData.current >= formData.capacity ? 'FULL' : formData.current > 0 ? 'OPEN' : 'PREPARING'
+      } : c));
+    } else {
+      const newCenter = {
+        id: Date.now(),
+        ...formData,
+        status: formData.current >= formData.capacity ? 'FULL' : formData.current > 0 ? 'OPEN' : 'PREPARING'
+      };
+      setCenters(prev => [...prev, newCenter]);
+    }
+    setIsModalOpen(false);
+  };
+
+  const deleteCenter = (id: number) => {
+    setCenters(prev => prev.filter(c => c.id !== id));
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -36,7 +81,10 @@ const EvacuationCenters = () => {
                   className="w-full sm:w-48 pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-blue-500 transition-all outline-none"
                 />
               </div>
-              <button className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20">
+              <button 
+                onClick={handleOpenAdd}
+                className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20"
+              >
                 <Plus size={18} />
                 Add Center
               </button>
@@ -86,10 +134,16 @@ const EvacuationCenters = () => {
                       </td>
                       <td className="py-5 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                          <button 
+                            onClick={() => handleOpenEdit(center)}
+                            className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                          >
                             <Edit2 size={16} />
                           </button>
-                          <button className="p-2.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">
+                          <button 
+                            onClick={() => deleteCenter(center.id)}
+                            className="p-2.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                          >
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -124,24 +178,110 @@ const EvacuationCenters = () => {
             <div className="space-y-6 relative z-10">
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-3xl font-black">745</p>
+                  <p className="text-3xl font-black">{centers.reduce((acc, c) => acc + c.current, 0)}</p>
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Occupants</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-black text-blue-400">1,950</p>
+                  <p className="text-xl font-black text-blue-400">{centers.reduce((acc, c) => acc + c.capacity, 0)}</p>
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Capacity</p>
                 </div>
               </div>
               <div className="w-full h-4 bg-white/10 rounded-full overflow-hidden p-1">
-                <div className="h-full bg-blue-500 rounded-full transition-all duration-1000" style={{ width: '38%' }} />
+                <div 
+                  className="h-full bg-blue-500 rounded-full transition-all duration-1000" 
+                  style={{ width: `${(centers.reduce((acc, c) => acc + c.current, 0) / centers.reduce((acc, c) => acc + c.capacity, 0)) * 100}%` }} 
+                />
               </div>
               <p className="text-[10px] font-black text-gray-500 text-center uppercase tracking-[0.2em]">
-                38% Overall District Occupancy
+                {Math.round((centers.reduce((acc, c) => acc + c.current, 0) / centers.reduce((acc, c) => acc + c.capacity, 0)) * 100)}% Overall District Occupancy
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal Overlay */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-white w-full max-w-lg rounded-[48px] p-8 lg:p-12 shadow-2xl relative z-10 border border-gray-100"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-2xl font-black text-gray-900 tracking-tight">
+                  {editingCenter ? 'Edit Center' : 'Add New Center'}
+                </h3>
+                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-all">
+                  <X size={24} className="text-gray-400" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Center Name</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={formData.name}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
+                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
+                    placeholder="e.g. PSU Gym"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Barangay</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={formData.barangay}
+                    onChange={e => setFormData({...formData, barangay: e.target.value})}
+                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
+                    placeholder="e.g. San Jose"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Capacity</label>
+                    <input 
+                      type="number" 
+                      required
+                      value={formData.capacity}
+                      onChange={e => setFormData({...formData, capacity: parseInt(e.target.value)})}
+                      className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Current</label>
+                    <input 
+                      type="number" 
+                      required
+                      value={formData.current}
+                      onChange={e => setFormData({...formData, current: parseInt(e.target.value)})}
+                      className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
+                    />
+                  </div>
+                </div>
+                <button 
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-900/20 hover:bg-blue-700 active:scale-[0.98] transition-all mt-4"
+                >
+                  {editingCenter ? 'Update Center' : 'Create Center'}
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

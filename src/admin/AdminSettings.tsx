@@ -1,13 +1,48 @@
-import React from 'react';
-import { Settings, Users, Bell, Shield, History, Plus, Trash2, Edit2, Lock, Smartphone } from 'lucide-react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { Settings, Users, Bell, Shield, History, Plus, Trash2, Edit2, Lock, Smartphone, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const AdminSettings = () => {
-  const admins = [
+  const [admins, setAdmins] = useState([
     { id: 1, name: 'Admin One', email: 'admin1@partido.gov.ph', role: 'Super Admin', status: 'Active' },
     { id: 2, name: 'Admin Two', email: 'admin2@partido.gov.ph', role: 'Operator', status: 'Active' },
     { id: 3, name: 'Admin Three', email: 'admin3@partido.gov.ph', role: 'Viewer', status: 'Inactive' },
-  ];
+  ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAdmin, setEditingAdmin] = useState<any>(null);
+  const [formData, setFormData] = useState({ name: '', email: '', role: 'Operator' });
+
+  const handleOpenAdd = () => {
+    setEditingAdmin(null);
+    setFormData({ name: '', email: '', role: 'Operator' });
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (admin: any) => {
+    setEditingAdmin(admin);
+    setFormData({ name: admin.name, email: admin.email, role: admin.role });
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingAdmin) {
+      setAdmins(prev => prev.map(a => a.id === editingAdmin.id ? { ...a, ...formData } : a));
+    } else {
+      const newAdmin = {
+        id: Date.now(),
+        ...formData,
+        status: 'Active'
+      };
+      setAdmins(prev => [...prev, newAdmin]);
+    }
+    setIsModalOpen(false);
+  };
+
+  const deleteAdmin = (id: number) => {
+    setAdmins(prev => prev.filter(a => a.id !== id));
+  };
 
   return (
     <div className="space-y-6 lg:space-y-8 animate-fade-in">
@@ -22,7 +57,10 @@ const AdminSettings = () => {
                 </div>
                 Admin User Management
               </h3>
-              <button className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20">
+              <button 
+                onClick={handleOpenAdd}
+                className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20"
+              >
                 <Plus size={18} />
                 Add Admin
               </button>
@@ -57,10 +95,16 @@ const AdminSettings = () => {
                         </td>
                         <td className="py-5 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <button className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                            <button 
+                              onClick={() => handleOpenEdit(admin)}
+                              className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                            >
                               <Edit2 size={16} />
                             </button>
-                            <button className="p-2.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">
+                            <button 
+                              onClick={() => deleteAdmin(admin.id)}
+                              className="p-2.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                            >
                               <Trash2 size={16} />
                             </button>
                           </div>
@@ -143,6 +187,79 @@ const AdminSettings = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal Overlay */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-white w-full max-w-lg rounded-[48px] p-8 lg:p-12 shadow-2xl relative z-10 border border-gray-100"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-2xl font-black text-gray-900 tracking-tight">
+                  {editingAdmin ? 'Edit Admin' : 'Add New Admin'}
+                </h3>
+                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-all">
+                  <X size={24} className="text-gray-400" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Full Name</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={formData.name}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
+                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
+                    placeholder="e.g. John Doe"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Email Address</label>
+                  <input 
+                    type="email" 
+                    required
+                    value={formData.email}
+                    onChange={e => setFormData({...formData, email: e.target.value})}
+                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none"
+                    placeholder="e.g. john@partido.gov.ph"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Role</label>
+                  <select 
+                    value={formData.role}
+                    onChange={e => setFormData({...formData, role: e.target.value})}
+                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-bold outline-none appearance-none"
+                  >
+                    <option>Super Admin</option>
+                    <option>Operator</option>
+                    <option>Viewer</option>
+                  </select>
+                </div>
+                <button 
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-900/20 hover:bg-blue-700 active:scale-[0.98] transition-all mt-4"
+                >
+                  {editingAdmin ? 'Update Admin' : 'Create Admin'}
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

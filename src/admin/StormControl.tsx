@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSystem, SystemMode } from '../context/SystemContext';
-import { CloudRain, Wind, Navigation, Calendar, Send, AlertTriangle } from 'lucide-react';
-import { motion } from 'motion/react';
+import { CloudRain, Wind, Navigation, Calendar, Send, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const StormControl = () => {
   const { mode, setMode } = useSystem();
@@ -12,6 +12,8 @@ const StormControl = () => {
   const [advisoryTitle, setAdvisoryTitle] = useState('STORM ADVISORY: Monitoring Tropical Storm "Pepito"');
   const [advisoryBody, setAdvisoryBody] = useState('Tropical Storm "Pepito" is currently 320km East of Bicol. Monitoring for potential landfall in Partido District. Residents are advised to prepare emergency kits.');
 
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const handleStateChange = (m: SystemMode) => {
     setMode(m);
     // Update advisory title based on state
@@ -20,8 +22,26 @@ const StormControl = () => {
     if (m === 'GREEN') setAdvisoryTitle('System Status: Normal');
   };
 
+  const handlePublish = () => {
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+  };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 animate-fade-in">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 animate-fade-in relative">
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 z-[100] bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-emerald-900/20 flex items-center gap-3"
+          >
+            <CheckCircle2 size={18} />
+            Advisory Published Successfully
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="lg:col-span-2 space-y-6 lg:space-y-8">
         {/* Storm Input Card */}
         <div className="bg-white p-6 lg:p-8 rounded-[32px] lg:rounded-[40px] border border-gray-100 shadow-sm">
@@ -110,7 +130,10 @@ const StormControl = () => {
                 className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl transition-all font-medium text-sm outline-none"
               />
             </div>
-            <button className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-900/20 hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+            <button 
+              onClick={handlePublish}
+              className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-900/20 hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+            >
               <Send size={18} />
               Save & Publish Advisory
             </button>

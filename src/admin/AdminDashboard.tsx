@@ -7,10 +7,11 @@ import {
   LifeBuoy, 
   ArrowUpRight,
   TrendingUp,
-  Activity
+  Activity,
+  CheckCircle2
 } from 'lucide-react';
 import { useSystem } from '../context/SystemContext';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   BarChart, 
   Bar, 
@@ -25,6 +26,17 @@ import {
 
 const AdminDashboard = () => {
   const { mode } = useSystem();
+  const [notification, setNotification] = React.useState<string | null>(null);
+
+  const handleQuickAction = (action: string) => {
+    setNotification(`Quick Action Triggered: ${action}`);
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  const handleRespond = (id: number) => {
+    setNotification(`Responding to Help Request #${id}`);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   const stats = [
     { label: 'Total Users', value: '12,482', icon: <Users />, color: 'bg-blue-500', trend: '+12%' },
@@ -44,7 +56,20 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="space-y-8 pb-12 animate-fade-in">
+    <div className="space-y-8 pb-12 animate-fade-in relative">
+      <AnimatePresence>
+        {notification && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-gray-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl flex items-center gap-3 border border-white/10"
+          >
+            <CheckCircle2 size={18} className="text-emerald-500" />
+            {notification}
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* System Status Banner */}
       <div className={`p-8 lg:p-12 rounded-[40px] lg:rounded-[56px] text-white shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between relative overflow-hidden ${
         mode === 'GREEN' ? 'bg-emerald-600 shadow-emerald-900/20' :
@@ -166,7 +191,10 @@ const AdminDashboard = () => {
                     <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">User ID: #USR-8291 • 12 mins ago</p>
                   </div>
                 </div>
-                <button className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-gray-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all active:scale-95">
+                <button 
+                  onClick={() => handleRespond(i)}
+                  className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-gray-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all active:scale-95"
+                >
                   Respond
                 </button>
               </div>
@@ -178,13 +206,22 @@ const AdminDashboard = () => {
           <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl" />
           <h3 className="text-xl font-black uppercase tracking-tight mb-8 relative z-10">Quick Actions</h3>
           <div className="space-y-4 relative z-10">
-            <button className="w-full p-6 bg-blue-600 rounded-[24px] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 active:scale-[0.98] transition-all text-center shadow-xl shadow-blue-900/40">
+            <button 
+              onClick={() => handleQuickAction('Trigger Cash Protocol')}
+              className="w-full p-6 bg-blue-600 rounded-[24px] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 active:scale-[0.98] transition-all text-center shadow-xl shadow-blue-900/40"
+            >
               🚨 Trigger Cash Protocol
             </button>
-            <button className="w-full p-6 bg-white/10 rounded-[24px] text-[10px] font-black uppercase tracking-widest hover:bg-white/20 active:scale-[0.98] transition-all text-center border border-white/10">
+            <button 
+              onClick={() => handleQuickAction('Send Advisory')}
+              className="w-full p-6 bg-white/10 rounded-[24px] text-[10px] font-black uppercase tracking-widest hover:bg-white/20 active:scale-[0.98] transition-all text-center border border-white/10"
+            >
               📢 Send Advisory
             </button>
-            <button className="w-full p-6 bg-white/10 rounded-[24px] text-[10px] font-black uppercase tracking-widest hover:bg-white/20 active:scale-[0.98] transition-all text-center border border-white/10">
+            <button 
+              onClick={() => handleQuickAction('Open Evac Centers')}
+              className="w-full p-6 bg-white/10 rounded-[24px] text-[10px] font-black uppercase tracking-widest hover:bg-white/20 active:scale-[0.98] transition-all text-center border border-white/10"
+            >
               🗺️ Open Evac Centers
             </button>
           </div>

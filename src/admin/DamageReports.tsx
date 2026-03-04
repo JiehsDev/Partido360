@@ -12,6 +12,14 @@ const DamageReports = () => {
     { id: 'REP-006', category: 'Medical Emergency', barangay: 'Goa', timestamp: '3h ago', status: 'PENDING', image: 'https://picsum.photos/seed/medical/400/300' },
   ]);
 
+  const updateStatus = (id: string, newStatus: string) => {
+    setReports(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
+  };
+
+  const deleteReport = (id: string) => {
+    setReports(prev => prev.filter(r => r.id !== id));
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'PENDING': return 'bg-yellow-100 text-yellow-700';
@@ -112,13 +120,22 @@ const DamageReports = () => {
               </div>
               
               <div className="flex items-center gap-3 pt-2">
-                <button className="flex-1 py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20">
+                <button 
+                  onClick={() => updateStatus(report.id, 'VALIDATED')}
+                  className="flex-1 py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20"
+                >
                   Validate
                 </button>
-                <button className="flex-1 py-4 bg-gray-50 text-gray-600 border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-100 active:scale-[0.98] transition-all">
+                <button 
+                  onClick={() => updateStatus(report.id, 'ESCALATED')}
+                  className="flex-1 py-4 bg-gray-50 text-gray-600 border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-100 active:scale-[0.98] transition-all"
+                >
                   Escalate
                 </button>
-                <button className="p-4 bg-red-50 text-red-400 border border-red-100 rounded-2xl hover:bg-red-100 hover:text-red-600 active:scale-[0.98] transition-all">
+                <button 
+                  onClick={() => deleteReport(report.id)}
+                  className="p-4 bg-red-50 text-red-400 border border-red-100 rounded-2xl hover:bg-red-100 hover:text-red-600 active:scale-[0.98] transition-all"
+                >
                   <X size={20} />
                 </button>
               </div>
